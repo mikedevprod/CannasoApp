@@ -1,8 +1,12 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import keytar from 'keytar';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const DB_NAME = 'NombreDeLaApp';
 
@@ -54,31 +58,23 @@ const connectDB = async () => {
 
   const binaryPath = path.join(__dirname, '../bin/mongodb', process.platform === 'win32' ? 'mongod.exe' : 'mongod');
 
-  process.env.MONGOMS_DOWNLOAD_URL = binaryPath;
-
   console.log(`Usando binario local: ${binaryPath}`);
 
   const mongoServer = await MongoMemoryServer.create({
     instance: {
       dbPath: getDbPath(),
       dbName: DB_NAME,
-      auth: true, // Habilitar autenticación
+      auth: false, // Desactivar autenticación temporalmente
     },
     binary: {
-      version: 'latest',
-      skipMD5: true,
+      path: binaryPath, // Configurar la ruta directamente al binario
+      download: false, // Evitar que descargue el binario
     },
   });
 
   const uri = mongoServer.getUri();
 
-  await mongoose.connect(uri, {
-    authSource: 'admin',
-    user: 'admin',
-    pass: password,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(uri);
 
   console.log(`MongoDB running at ${uri}`);
 
