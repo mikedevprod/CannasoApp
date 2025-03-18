@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import ConfigurarDB from './components/ConfigurarDB';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [isPasswordSet, setIsPasswordSet] = useState(null);
+
+  useEffect(() => {
+    const checkPasswordStatus = async () => {
+      try {
+        const { data } = await axios.get('/api/check/check-db');
+        setIsPasswordSet(data.isPasswordSet);
+      } catch (err) {
+        console.error('Error al comprobar el estado de la contraseña:', err);
+      }
+    };
+
+    checkPasswordStatus();
+  }, []);
+
+  if (isPasswordSet === null) return <div>Cargando...</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        {/* Redirige automáticamente según el estado de la contraseña */}
+        <Route path="/" element={isPasswordSet ? <Navigate to="/login" /> : <Navigate to="/setup" />} />
+        {/* Ruta para configurar la contraseña inicial */}
+        <Route path="/setup" element={<ConfigurarDB />} />
+        {/* Aquí añadiremos la ruta para login y dashboard más adelante */}
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
