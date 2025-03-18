@@ -53,8 +53,9 @@ export const autenticarUsuario = async (req, res) => {
 
   try {
     const usuario = await Usuario.findOne({ numeroSocio });
+    const esUsuarioValido = usuario && usuario.rol !== 'comun' && (await usuario.matchPassword(password))
 
-    if (usuario && (await usuario.matchPassword(password))) {
+    if (esUsuarioValido) {
       const token = generarToken(usuario._id);
 
       // Guardar el token en una cookie HTTP Only
@@ -90,6 +91,9 @@ export const obtenerPerfil = async (req, res) => {
   } else {
     res.status(404).json({ message: "Usuario no encontrado" });
   }
+};
+export const verificarToken = async (req, res) => {
+  res.send({message: "Token Verificado"})
 };
 
 export const logoutUsuario = (req, res) => {
