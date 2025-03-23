@@ -5,29 +5,46 @@ import ConfigurarDB from "./components/ConfigurarDB";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useAuthStore from "./store/useAuthStore";
-
-const Dashboard = () => {
-  return <div>Bienvenido al Dashboard!</div>;
-};
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   const [isPasswordSet, setIsPasswordSet] = useState(null);
+  const [isVerificado, setIsVerificado] = useState(false);
+  const setUsuario = useAuthStore((state) => state.setUsuario);
   const estaAutenticado = useAuthStore((state) => state.estaAutenticado);
 
+  // Comprobar si la contraseña de la DB está configurada
   useEffect(() => {
     const checkPasswordStatus = async () => {
       try {
         const { data } = await axios.get("/api/check/check-db");
         setIsPasswordSet(data.isPasswordSet);
+  
+        if (data.isPasswordSet) {
+          try {
+            // Verificar el token para restaurar el estado de sesión
+            const { data } = await axios.get("/api/auth/verificar-token");
+            if (data.message === "Token Verificado") {
+              setUsuario({ nombre: data.nombre, rol: data.rol });
+            }
+          } catch (err) {
+            console.warn("Token inválido o sesión caducada");
+            limpiarUsuario(); // <-- Limpia el estado si no hay token
+          }
+        }
       } catch (err) {
         console.error("Error al comprobar el estado de la contraseña:", err);
+      } finally {
+        setIsVerificado(true);
       }
     };
-
+  
     checkPasswordStatus();
   }, []);
+  
 
-  if (isPasswordSet === null) return <div>Cargando...</div>;
+  // Mostrar un loader mientras se verifica el estado de autenticación
+  if (isPasswordSet === null || !isVerificado) return <div>Cargando...</div>;
 
   return (
     <BrowserRouter>

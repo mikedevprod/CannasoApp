@@ -10,6 +10,11 @@ export const proteger = async (req, res, next) => {
 
       req.user = await Usuario.findById(decoded.id).select('-password');
 
+      if (!token) {
+        console.log("No hay token. Cerrando sesión...");
+        return res.status(401).json({ message: "No autorizado, no hay token" });
+      }
+
       if (!req.user) {
         return res.status(401).json({ message: 'Usuario no autorizado' });
       }

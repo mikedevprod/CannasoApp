@@ -93,8 +93,19 @@ export const obtenerPerfil = async (req, res) => {
   }
 };
 export const verificarToken = async (req, res) => {
-  res.send({message: "Token Verificado"})
+  const usuario = await Usuario.findById(req.user.id);
+  
+  if (usuario) {
+    res.json({
+      message: "Token Verificado",
+      nombre: usuario.nombre,
+      rol: usuario.rol,
+    });
+  } else {
+    res.status(404).json({ message: "Usuario no encontrado" });
+  }
 };
+
 
 export const logoutUsuario = (req, res) => {
   res.clearCookie("jwt", {
