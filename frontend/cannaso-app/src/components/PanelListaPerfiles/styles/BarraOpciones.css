@@ -1,0 +1,13 @@
+#barra_opciones{
+    position: relative;
+}
+#barra_opciones::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 2.5%;
+    height: 1%;
+    width: 95%;
+    background-color: rgb(185, 185, 185); /* Color del borde */
+}
+

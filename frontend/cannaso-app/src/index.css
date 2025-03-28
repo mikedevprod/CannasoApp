@@ -1,9 +1,16 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 @font-face {
   font-family: grotesk;
   src: url("fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf");
 }
 
 :root {
+  background-color: aqua;
   font-family: grotesk;
   line-height: 1.5;
   font-weight: 400;
@@ -14,11 +21,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-*{
-  margin: 0;
-  padding: 0;
+  width: 100vw;
+  height: 100vh;
   box-sizing: border-box;
 }
 

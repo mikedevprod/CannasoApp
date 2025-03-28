@@ -1,0 +1,19 @@
+.previewer {
+    position: relative; /* Necesario para posicionar el ::before relativo al contenedor */
+    padding: 2rem;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgb(247, 247, 247);
+    border-top: 1px solid black;
+    border-top-left-radius: 10px;
+}
+
+.previewer::before {
+    content: '';
+    position: absolute;
+    top: 0%; /* Deja 10% de espacio arriba */
+    bottom: 0%; /* Deja 10% de espacio abajo */
+    left: 0;
+    width: 1px; /* Grosor del borde */
+    background-color: rgb(127, 127, 127); /* Color del borde */
+}

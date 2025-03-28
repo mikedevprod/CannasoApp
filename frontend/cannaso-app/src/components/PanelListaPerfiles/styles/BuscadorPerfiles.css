@@ -1,0 +1,19 @@
+@font-face {
+    font-family: grotesk;
+    src: url("../../../fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf");
+  }
+
+#buscador_perfiles{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="search"]{
+    width: 75%;
+    height: 50%;
+    font-size: large;
+    font-family: grotesk;
+    padding-left: .5rem;
+    
+}

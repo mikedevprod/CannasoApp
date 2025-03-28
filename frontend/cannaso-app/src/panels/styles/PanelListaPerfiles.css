@@ -1,0 +1,6 @@
+#panel_lista_perfiles{
+    display: grid;
+    grid-template-rows: .6fr minmax(0, 6fr) 1fr;
+    height: 100%;
+    overflow: hidden;
+}

@@ -69,8 +69,10 @@ export const autenticarUsuario = async (req, res) => {
       res.json({
         _id: usuario.id,
         nombre: usuario.nombre,
+        numeroSocio: usuario.numeroSocio,
         rol: usuario.rol,
       });
+      
     } else {
       res.status(401).json({ message: "Credenciales inválidas" });
     }
@@ -99,8 +101,10 @@ export const verificarToken = async (req, res) => {
     res.json({
       message: "Token Verificado",
       nombre: usuario.nombre,
+      numeroSocio: usuario.numeroSocio,
       rol: usuario.rol,
     });
+    
   } else {
     res.status(404).json({ message: "Usuario no encontrado" });
   }

@@ -1,0 +1,130 @@
+/* Estilos para el temporizador con Neumorphism hacia dentro */
+
+.countdown-toggle {
+  width: 80px;
+  background-color: #444;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  font-size: 1em;
+  text-align: center;
+
+  /* Estilo Neumorphism hacia dentro */
+  background: #444;
+  box-shadow: inset 4px 4px 6px rgba(0, 0, 0, 0.5), 
+              inset -4px -4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.countdown-toggle.visible {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Animación sutil para el texto del temporizador */
+/*@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.countdown-toggle.visible {
+  animation: pulse 1.5s infinite ease-in-out;
+}*/
+
+/* Estilos adicionales para mantener la coherencia */
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.toggle-switch {
+  width: 95px;
+  height: 35px;
+  background: #c2270f;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  padding: 4px 8px;
+
+  /* Estilo Neumorphism hacia fuera */
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5), 
+              -2px -2px 6px rgba(255, 255, 255, 0.1);
+}
+
+.toggle-switch.active {
+  background: #378b41;
+}
+
+.toggle-switch.disabled {
+  background: gray;
+  cursor: default;
+}
+
+.switch-circle {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  background: rgb(247, 247, 247);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 5px;
+  transition: transform 0.3s ease-in-out;
+
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2),
+              inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.toggle-switch.active .switch-circle {
+  transform: translateX(60px);
+}
+
+.toggle-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  left: 40px;
+  transition: color 0.42s ease-in-out, left 0.42s ease-in-out;
+}
+
+.toggle-switch.active .toggle-label {
+  left: 12px;
+  width: 80px;
+}
+
+.check {
+  color: #378b41;
+  font-size: 14px;
+}
+
+.cross {
+  color: #c2270f;
+  font-size: 14px;
+}
+
+/* Efecto de vibración para el toggle cuando está deshabilitado */
+@keyframes vibrate {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
+.toggle-switch.vibrate {
+  animation: vibrate 0.3s ease-in-out;
+}

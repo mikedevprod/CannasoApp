@@ -1,0 +1,110 @@
+.socio-card > * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.socio-card {
+  position: relative;
+  box-sizing: border-box;
+  background-color: rgb(247, 247, 247);
+  width: 325px;
+  height: 110px;
+  border-radius: 0.5rem;
+  transition: ease-in-out 0.1s;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  transform: scale(0.6);
+}
+
+.socio-card:hover {
+  filter: grayscale(0.7);
+  cursor: pointer;
+}
+
+.container-avatar {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  box-shadow: none;
+  border: none;
+}
+
+.socio-avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+}
+
+.socio-id {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  background-color: rgb(14, 14, 14);
+  border-radius: 100px;
+  width: 37px;
+  height: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.container-name {
+  width: 225px;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  text-align: center;
+  font-size: .9em;
+  padding-left: .8rem;
+}
+
+.container-led {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: end;
+  transition: 1s ease-in;
+}
+
+.socio-led {
+  background-color: rgb(194, 39, 15);
+  width: 2rem;
+  height: 100%;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  transition: 0.42s ease-in;
+}
+.socio-led-actived {
+  background-color: #378b41;
+  width: 2rem;
+  height: 100%;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  transition: 0.42s ease-in;
+}
+
+@media (min-width: 1200px) and (min-height: 800px) {
+  /* Tus estilos aquí */
+  .socio-card {
+    width: 305px;
+    transform: scale(0.8);
+    position: relative;
+    box-sizing: border-box;
+    background-color: rgb(247, 247, 247);
+    height: 110px;
+    border-radius: 0.5rem;
+    transition: ease-in-out 0.1s;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+}
+

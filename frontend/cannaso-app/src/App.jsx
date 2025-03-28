@@ -5,7 +5,7 @@ import ConfigurarDB from "./components/ConfigurarDB";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useAuthStore from "./store/useAuthStore";
-import Dashboard from "./components/Dashboard";
+import DashboardPrincipal from "./pages/DashboardPrincipal";
 
 const App = () => {
   const [isPasswordSet, setIsPasswordSet] = useState(null);
@@ -25,7 +25,11 @@ const App = () => {
             // Verificar el token para restaurar el estado de sesión
             const { data } = await axios.get("/api/auth/verificar-token");
             if (data.message === "Token Verificado") {
-              setUsuario({ nombre: data.nombre, rol: data.rol });
+              setUsuario({
+                nombre: data.nombre,
+                numeroSocio: data.numeroSocio,
+                rol: data.rol,
+              });
             }
           } catch (err) {
             console.warn("Token inválido o sesión caducada");
@@ -76,7 +80,7 @@ const App = () => {
         {/* Ruta protegida para el dashboard */}
         <Route
           path="/dashboard"
-          element={<ProtectedRoute element={<Dashboard />} />}
+          element={<ProtectedRoute element={<DashboardPrincipal socioColaborador={setUsuario}/>} />}
         />
       </Routes>
     </BrowserRouter>

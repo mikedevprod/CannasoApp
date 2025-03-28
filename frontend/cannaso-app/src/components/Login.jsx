@@ -25,7 +25,7 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      setUsuario({ nombre: data.nombre, rol: data.rol });
+      setUsuario({ nombre: data.nombre, numeroSocio: data.numeroSocio, rol: data.rol });
       navigate('/dashboard');
     } catch (err) {
       setError('Credenciales inválidas');
