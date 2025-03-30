@@ -5,7 +5,7 @@ import ListaPerfiles from "../components/PanelListaPerfiles/ListaPerfiles.jsx";
 
 import "./styles/PanelListaPerfiles.css";
 
-export default function PanelListaPerfiles({ setPerfilSeleccionado, perfiles }) {
+export default function PanelListaPerfiles({ setPerfilSeleccionado, perfiles, perfilColaborador }) {
   const [valorBusqueda, setValorBusqueda] = useState("");
 
   return (
@@ -16,7 +16,7 @@ export default function PanelListaPerfiles({ setPerfilSeleccionado, perfiles }) 
         setPerfilSeleccionado={setPerfilSeleccionado}
         perfiles={perfiles}
       />
-      <BarraOpciones setDashboardSeleccionado={setPerfilSeleccionado}/>
+      <BarraOpciones setDashboardSeleccionado={setPerfilSeleccionado} perfilColaborador={perfilColaborador}/>
     </div>
   );
 }

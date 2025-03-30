@@ -65,6 +65,7 @@ const connectDB = async () => {
       dbPath: getDbPath(),
       dbName: DB_NAME,
       auth: false, // Desactivar autenticación temporalmente
+      port: 60420
     },
     binary: {
       path: binaryPath, // Configurar la ruta directamente al binario

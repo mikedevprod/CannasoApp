@@ -1,0 +1,88 @@
+/* Fondo general */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #a3b18a, #5c5c3d);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Tarjeta del login */
+  .login-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #a3b18a, #5c5c3d);
+  }
+  
+  
+  /* Título */
+  .login-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #3a3a1a;
+  }
+  
+  /* Mensaje de error */
+  .login-error {
+    background-color: #fcebea;
+    color: #cc1f1a;
+    padding: 0.75rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Formulario */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Inputs */
+  .login-input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #a3b18a;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .login-input:focus {
+    outline: none;
+    border-color: #588157;
+    box-shadow: 0 0 0 2px rgba(88, 129, 87, 0.2);
+  }
+  
+  /* Botón */
+  .login-button {
+    padding: 0.75rem 1rem;
+    background-color: #588157;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-button:hover {
+    background-color: #3a5a40;
+  }
+  

@@ -1,5 +1,8 @@
+
+
 #barra_opciones{
     position: relative;
+    padding: .1rem;
 }
 #barra_opciones::before{
     content: '';
@@ -9,5 +12,27 @@
     height: 1%;
     width: 95%;
     background-color: rgb(185, 185, 185); /* Color del borde */
+}
+
+.barra_botones{
+    padding: 1rem;
+    height: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button{
+    width: auto;
+    margin: 0.1rem;
+    background-color: transparent;
+    transition: transform 1s ease-in-out;
+}
+button:hover{
+    transform: scale(1.1);
+}
+
+#img-btt-barra-opciones{
+    width: 32px;
 }
 

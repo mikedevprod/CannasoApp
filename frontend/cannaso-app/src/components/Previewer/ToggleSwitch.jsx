@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./styles/ToggleSwitch.css";
 import axios from "axios";
 
-const ToggleSwitch = ({ isActive, onToggle, perfil }) => {
+const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
   const [timers, setTimers] = useState(() => {
     const savedTimers = localStorage.getItem("timers");
     return savedTimers ? JSON.parse(savedTimers) : {};
@@ -27,7 +27,7 @@ const ToggleSwitch = ({ isActive, onToggle, perfil }) => {
   
       const response = await axios.post(
         "http://localhost:5000/api/fichaje",
-        { idSocio },
+        { idSocio, socioColaborador: perfilColaborador },
         {
           withCredentials: true, // ✅ envía la cookie con el JWT
         }

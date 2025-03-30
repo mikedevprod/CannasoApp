@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import useAuthStore from '../store/useAuthStore.js';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import useAuthStore from "../store/useAuthStore";
+import "./styles/Login.css";
 
 const Login = () => {
-  const [numeroSocio, setNumeroSocio] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [numeroSocio, setNumeroSocio] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const setUsuario = useAuthStore((state) => state.setUsuario);
 
@@ -14,50 +15,57 @@ const Login = () => {
     e.preventDefault();
 
     if (!numeroSocio || !password) {
-      setError('Todos los campos son obligatorios');
+      setError("Todos los campos son obligatorios");
       return;
     }
 
     try {
       const { data } = await axios.post(
-        '/api/auth/login',
+        "/api/auth/login",
         { numeroSocio, password },
         { withCredentials: true }
       );
 
-      setUsuario({ nombre: data.nombre, numeroSocio: data.numeroSocio, rol: data.rol });
-      navigate('/dashboard');
+      setUsuario({
+        nombre: data.nombre,
+        numeroSocio: data.numeroSocio,
+        rol: data.rol,
+      });
+      navigate("/dashboard");
     } catch (err) {
-      setError('Credenciales inválidas');
+      setError("Credenciales inválidas");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold mb-4">Iniciar Sesión</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <input
-          type="text"
-          placeholder="Número de socio"
-          value={numeroSocio}
-          onChange={(e) => setNumeroSocio(e.target.value)}
-          className="w-full p-2 border rounded-md mb-4"
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded-md mb-4"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-        >
-          Iniciar Sesión
-        </button>
-      </form>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-card">
+          <h1 className="login-title">Iniciar Sesión</h1>
+
+          {error && <div className="login-error">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <input
+              type="text"
+              placeholder="Número de socio"
+              value={numeroSocio}
+              onChange={(e) => setNumeroSocio(e.target.value)}
+              className="login-input"
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="login-input"
+            />
+            <button type="submit" className="login-button">
+              Iniciar Sesión
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

@@ -21,6 +21,10 @@ const fichajeSchema = new Schema({
   fichajeCompletado: {
     type: Boolean,
     default: false
+  },
+  colaboradorAsociado: {
+    type: Object,
+    required: true
   }
 }, {
   versionKey: false

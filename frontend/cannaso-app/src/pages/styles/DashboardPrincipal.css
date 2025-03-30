@@ -1,7 +1,7 @@
 .dashboardPrincipal{
     width: 100vw;
     height: 100vh;
-    background-color: antiquewhite;
+    background-color: white;
     display: grid;
-    grid-template-columns: 2fr 6fr;
+    grid-template-columns: 2fr 8fr;
 }

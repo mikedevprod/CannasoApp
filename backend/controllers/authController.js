@@ -2,10 +2,8 @@ import Usuario from "../models/Usuario.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const generarToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
-  });
+export const generarToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
 export const registrarUsuario = async (req, res) => {
@@ -17,36 +15,38 @@ export const registrarUsuario = async (req, res) => {
       return res.status(400).json({ message: "El usuario ya existe" });
     }
 
+    const avatarPath = req.file
+      ? `/assets/avatars/${req.file.filename}`
+      : `/assets/avatars/man.png`;
+
     const usuario = await Usuario.create({
       nombre,
       numeroSocio,
-      password,
+      password: password || "",
       rol,
+      foto: avatarPath,
     });
 
-    if (usuario) {
-      const token = generarToken(usuario._id);
+    const token = generarToken(usuario._id);
 
-      // Guardar el token en una cookie HTTP Only
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Solo en HTTPS en producción
-        sameSite: "strict", // Protege contra CSRF
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-      });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
-      res.status(201).json({
-        _id: usuario.id,
-        nombre: usuario.nombre,
-        rol: usuario.rol,
-      });
-    } else {
-      res.status(400).json({ message: "Datos inválidos" });
-    }
+    res.status(201).json({
+      _id: usuario.id,
+      nombre: usuario.nombre,
+      rol: usuario.rol,
+      foto: usuario.foto,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error en el servidor" });
+    console.error("Error al registrar usuario:", error);
+    res.status(500).json({ message: "Error al registrar usuario" });
   }
 };
+
 
 export const autenticarUsuario = async (req, res) => {
   const { numeroSocio, password } = req.body;
@@ -63,7 +63,6 @@ export const autenticarUsuario = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Solo en HTTPS en producción
         sameSite: "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 
       res.json({

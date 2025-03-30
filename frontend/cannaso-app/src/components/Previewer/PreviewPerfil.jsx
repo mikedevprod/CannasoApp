@@ -9,11 +9,11 @@ import { createSwapy } from "swapy";
 
 import avatarDefecto from "../../assets/avatars/man.png";
 
-export default function PreviewPerfil({ perfil, setPerfiles }) {
+export default function PreviewPerfil({ perfil, setPerfiles, perfilColaborador }) {
   const previewRef = useRef(null);
   const containerRef = useRef(null);
   const swapyRef = useRef(null);
-  const [isActive, setIsActive] = useState(perfil.active);
+  const [isActive, setIsActive] = useState(perfil.activo);
   const [isHidden, setIsHidden] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isRetirarModalOpen, setRetirarModalOpen] = useState(false);
@@ -61,7 +61,10 @@ export default function PreviewPerfil({ perfil, setPerfiles }) {
     setRetirarModalOpen(true);
   };
 
-  const imagePath = perfil.foto ? perfil.foto : avatarDefecto;
+  const imagePath = perfil.foto?.startsWith("/assets/avatars/")
+  ? perfil.foto
+  : avatarDefecto;
+
 
   return (
     <div id="preview_perfil" ref={previewRef} className={isHidden ? "hidden" : ""}>
@@ -73,7 +76,7 @@ export default function PreviewPerfil({ perfil, setPerfiles }) {
         <div className="preview_perfil_header_info">
           <h1>{perfil.nombre}</h1>
           <div className="containerIconoOnline">
-            <ToggleSwitch isActive={isActive} onToggle={toggleActive} perfil={perfil} />
+            <ToggleSwitch isActive={isActive} onToggle={toggleActive} perfil={perfil} perfilColaborador={perfilColaborador}/>
           </div>
         </div>
         <div className="preview_perfil_header_actions">
@@ -100,7 +103,7 @@ export default function PreviewPerfil({ perfil, setPerfiles }) {
         <div data-swapy-slot="3">
           <div data-swapy-item="3" className="swapy-item" id="chartC">
             <h2 className="donut-title">Estancia Semanal</h2>
-            <BarChart idSocio={perfil.id} />
+            <BarChart idSocio={perfil._id} />
           </div>
         </div>
         <div data-swapy-slot="4">

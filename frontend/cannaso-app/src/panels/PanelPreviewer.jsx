@@ -5,7 +5,7 @@ import "./styles/PanelPreviewer.css";
 import PreviewPerfil from "../components/Previewer/PreviewPerfil.jsx";
 import PanelDashboardColaborador from "../panels/PanelDashboardColaborador.jsx";
 
-export default function PanelPreviewer({ perfilSeleccionado, setPerfiles}) {
+export default function PanelPreviewer({ perfilSeleccionado, setPerfiles, perfilColaborador}) {
 
   const condicionDashboard = !perfilSeleccionado || Object.keys(perfilSeleccionado).length === 0
 
@@ -13,7 +13,7 @@ export default function PanelPreviewer({ perfilSeleccionado, setPerfiles}) {
     <div className="previewer">
   {  
     condicionDashboard? <PanelDashboardColaborador perfil={perfilSeleccionado} setPerfiles={setPerfiles}></PanelDashboardColaborador>
-    : <PreviewPerfil perfil={perfilSeleccionado} setPerfiles={setPerfiles}/> 
+    : <PreviewPerfil perfil={perfilSeleccionado} setPerfiles={setPerfiles} perfilColaborador={perfilColaborador}/> 
   }
 </div>
 

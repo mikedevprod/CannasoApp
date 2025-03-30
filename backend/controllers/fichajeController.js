@@ -3,6 +3,7 @@ import Usuario from "../models/Usuario.js";
 
 export const añadirFichaje = async (req, res) => {
   const { idSocio } = req.body;
+  const socioColaborador = req.user;
 
   try {
     const usuario = await Usuario.findById(idSocio);
@@ -17,37 +18,32 @@ export const añadirFichaje = async (req, res) => {
     });
 
     if (fichajeAbierto) {
-      // Fichaje de salida
       fichajeAbierto.salida = new Date().toLocaleTimeString();
       fichajeAbierto.fichajeCompletado = true;
       await fichajeAbierto.save();
 
-      // Actualizar el estado del usuario a inactivo directamente en la base de datos
       await Usuario.findByIdAndUpdate(idSocio, { activo: false });
 
-      return res
-        .status(200)
-        .json({ message: "Salida registrada", fichaje: fichajeAbierto });
+      return res.status(200).json({ message: "Salida registrada", fichaje: fichajeAbierto });
     } else {
-      // Fichaje de entrada con la hora actual
       const nuevoFichaje = new Fichaje({
         idSocio,
         entrada: new Date().toLocaleTimeString(),
         fecha: new Date().toISOString().split("T")[0],
+        colaboradorAsociado: socioColaborador,
       });
-      await nuevoFichaje.save();
 
-      // Actualizar el estado del usuario a activo directamente en la base de datos
+      await nuevoFichaje.save();
       await Usuario.findByIdAndUpdate(idSocio, { activo: true });
 
-      return res
-        .status(201)
-        .json({ message: "Entrada registrada", fichaje: nuevoFichaje });
+      return res.status(201).json({ message: "Entrada registrada", fichaje: nuevoFichaje });
     }
   } catch (error) {
-    return res.status(500).json({ message: "Error al gestionar el fichaje" });
+    console.error("❌ Error en crear fichaje:", error);
+    return res.status(500).json({ message: "Error al gestionar el fichaje", error: error.message });
   }
 };
+
 
 export const getFichajesBySocio = async (req, res) => {
   const { idSocio } = req.params

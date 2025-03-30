@@ -36,10 +36,12 @@ const Dashboard = () => {
       <PanelListaPerfiles
         setPerfilSeleccionado={setPerfilSeleccionado}
         perfiles={perfiles}
+        perfilColaborador={socioColaborador}
       />
       <PanelPreviewer
         perfilSeleccionado={perfilSeleccionado}
         setPerfiles={setPerfiles}
+        perfilColaborador={socioColaborador}
       />
     </div>
   );

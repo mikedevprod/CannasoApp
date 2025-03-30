@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styles/ConfigurarDB.css'
+import './styles/ConfigurarDB.css';
 
 const ConfigurarDB = () => {
   const [password, setPassword] = useState('');
@@ -39,7 +39,9 @@ const ConfigurarDB = () => {
 
     try {
       await axios.post('/api/setup/setup-db', { password });
-      navigate('/login');
+
+      // ✅ Después de configurar, redirigimos a crear el primer usuario
+      navigate('/crear-usuario');
     } catch (err) {
       console.error('Error al configurar la contraseña:', err);
       setError('Error al configurar la contraseña');
@@ -52,7 +54,7 @@ const ConfigurarDB = () => {
     <div className="configurarDB_page">
       <h1 className="text-2xl font-bold mb-4">¡Bienvenido a Cannaso!</h1>
       <h2>Empecemos con la configuración...</h2>
-      <h3>Crea una contraseña para tu base de datos y manen los datos a salvo.</h3>
+      <h3>Crea una contraseña para tu base de datos y manten los datos a salvo.</h3>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
         <input
