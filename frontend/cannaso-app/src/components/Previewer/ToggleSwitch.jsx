@@ -43,7 +43,7 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
           ...timers,
           [perfil.numeroSocio]: {
             isDisabled: true,
-            countdown: 900,
+            countdown: 30,
             fichajeTimestamp: now,
           },
         };
@@ -63,7 +63,7 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
 
     intervalRefs.current[numeroSocio] = setInterval(() => {
       const elapsedSeconds = Math.floor((new Date().getTime() - timestamp) / 1000);
-      const remaining = 900 - elapsedSeconds;
+      const remaining = 30 - elapsedSeconds;
 
       setTimers((prevTimers) => {
         const updatedTimers = {

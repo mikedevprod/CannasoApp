@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const fichajeSchema = new Schema({
-  idSocio: {
+  numeroSocio: {
     type: String,
     required: true,
     trim: true

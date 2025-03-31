@@ -48,11 +48,22 @@ export const añadirRetirada = async (req, res) => {
       res
         .status(201)
         .json({ message: "Retirada y actualización completadas." });
-    }else{
-      res.status(500).json({ message: "Error al registrar retirada.", error });  
+    } else {
+      res.status(500).json({ message: "Error al registrar retirada.", error });
     }
   } catch (error) {
     console.error("❌ Error en añadirRetirada:", error);
     res.status(500).json({ message: "Error al registrar retirada.", error });
+  }
+};
+
+export const getRetiradas = async (req, res) => {
+  const {fecha} = req.params
+
+  try {
+    const retiradas = await Retirada.find({fecha: fecha});
+    res.status(200).send(retiradas);
+  } catch (error) {
+    res.status(500).send("No se han conseguido las retiradas.");
   }
 };

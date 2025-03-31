@@ -46,12 +46,15 @@ export default function PreviewPerfil({ perfil, setPerfiles, perfilColaborador }
   const toggleActive = () => {
     const nuevoEstado = !isActive;
     setIsActive(nuevoEstado);
+  
     setPerfiles((prevPerfiles) =>
       prevPerfiles.map((p) =>
-        p.numeroSocio === perfil.numeroSocio ? { ...p, active: nuevoEstado } : p
+        p.numeroSocio === perfil.numeroSocio ? { ...p, activo: nuevoEstado } : p
       )
     );
   };
+  
+  
 
   const handleEditClick = () => {
     setEditModalOpen(true);

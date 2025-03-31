@@ -27,7 +27,7 @@ export const añadirFichaje = async (req, res) => {
       return res.status(200).json({ message: "Salida registrada", fichaje: fichajeAbierto });
     } else {
       const nuevoFichaje = new Fichaje({
-        idSocio,
+        numeroSocio: usuario.numeroSocio,
         entrada: new Date().toLocaleTimeString(),
         fecha: new Date().toISOString().split("T")[0],
         colaboradorAsociado: socioColaborador,
@@ -59,3 +59,14 @@ export const getFichajesBySocio = async (req, res) => {
     res.status(500).send("ERROR FICHAJES - No se ha podido procesar la petición.");
   }
 };
+
+export const getFichajesFecha = async (req, res) =>{
+  const {fecha} = req.params
+
+  try {
+    const fichajes = await Fichaje.find({fecha})
+    res.status(200).send(fichajes)
+  } catch (error) {
+    res.status(500).send("No se han conseguido los fichajes")
+  }
+}

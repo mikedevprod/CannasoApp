@@ -9,11 +9,16 @@ import iconoLogout from "../../assets/icons/cerrar-sesion.png";
 import iconoPDF from "../../assets/icons/pdf.png";
 
 import ModalAñadirUsuario from "./ModalAñadirUsuario.jsx";
+import ModalSeleccionFechaRetiradas from "./ModalSeleccionFechaRetiradas.jsx";
+import ModalSeleccionFechaFichajes from "./ModalSeleccionFechaFichajes.jsx";
 
 export default function BarraOpciones({ setDashboardSeleccionado, perfilColaborador }) {
   const navigate = useNavigate();
   const limpiarUsuario = useAuthStore((state) => state.limpiarUsuario);
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const [modalAddUserVisible, setModalAddUserVisible] = useState(false);
+  const [modalFechaRetiradasVisible, setModalFechaRetiradasVisible] = useState(false);
+  const [modalFechaFichajesVisible, setModalFechaFichajesVisible] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -33,30 +38,40 @@ export default function BarraOpciones({ setDashboardSeleccionado, perfilColabora
     <div id="barra_opciones">
       <h2>Bienvenido, {perfilColaborador.nombre}</h2>
       <div className="barra_botones">
-        <button onClick={() => setModalVisible(true)}>
+        <button onClick={() => setModalAddUserVisible(true)}>
           <img src={iconoAddUser} alt="Añadir Usuario" id="img-btt-barra-opciones" />
         </button>
-        <button onClick={() => console.log("Exportar Retiradas")} id="btt-pdf">
+
+        {/* PDF Retiradas - Seleccionar Fecha */}
+        <button onClick={() => setModalFechaRetiradasVisible(true)} id="btt-pdf">
           <img src={iconoPDF} alt="PDF Retiradas" id="img-btt-barra-opciones" />
           <b><span>RETIRADAS</span></b>
         </button>
-        <button onClick={() => console.log("Exportar Fichajes")} id="btt-pdf">
+
+        {/* PDF Fichajes - Seleccionar Fecha */}
+        <button onClick={() => setModalFechaFichajesVisible(true)} id="btt-pdf">
           <img src={iconoPDF} alt="PDF Fichajes" id="img-btt-barra-opciones" />
           <b><span>FICHAJES</span></b>
         </button>
+
         <button onClick={handleLogout}>
           <img src={iconoLogout} alt="Cerrar sesión" id="img-btt-barra-opciones" />
         </button>
       </div>
 
-      {modalVisible && (
+      {modalAddUserVisible && (
         <ModalAñadirUsuario
-          onClose={() => setModalVisible(false)}
-          onUsuarioCreado={() => {
-            setModalVisible(false);
-            // Aquí puedes refrescar la lista si lo necesitas
-          }}
+          onClose={() => setModalAddUserVisible(false)}
+          onUsuarioCreado={() => setModalAddUserVisible(false)}
         />
+      )}
+
+      {modalFechaRetiradasVisible && (
+        <ModalSeleccionFechaRetiradas onClose={() => setModalFechaRetiradasVisible(false)} />
+      )}
+
+      {modalFechaFichajesVisible && (
+        <ModalSeleccionFechaFichajes onClose={() => setModalFechaFichajesVisible(false)} />
       )}
     </div>
   );
