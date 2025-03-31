@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+// src/components/CrearPrimerUsuario.jsx
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./styles/CrearPrimerUsuario.css";
@@ -8,24 +9,7 @@ const CrearPrimerUsuario = () => {
   const [numeroSocio, setNumeroSocio] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [yaExisteUsuario, setYaExisteUsuario] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const verificarUsuarios = async () => {
-      try {
-        const { data } = await axios.get("/api/socio/socios");
-        if (data && data.length > 0) {
-          setYaExisteUsuario(true);
-          navigate("/login");
-        }
-      } catch (err) {
-        console.error("Error verificando usuarios:", err);
-      }
-    };
-
-    verificarUsuarios();
-  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,17 +24,15 @@ const CrearPrimerUsuario = () => {
         nombre,
         numeroSocio,
         password,
-        rol: "admin",   // <- asignamos rol admin
+        rol: "admin", // 👈 aquí está el problema
       });
-
+      
       navigate("/login");
     } catch (err) {
       console.error("Error al crear el usuario:", err);
-      setError("No se pudo crear el usuario (¿ya existe ese número de socio?)");
+      setError("No se pudo crear el usuario");
     }
   };
-
-  if (yaExisteUsuario) return null;
 
   return (
     <div className="crear-usuario-page">

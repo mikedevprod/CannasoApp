@@ -25,6 +25,8 @@ export default function ModalAñadirUsuario({ onClose, onUsuarioCreado }) {
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("numeroSocio", numeroSocio);
+    formData.append("emitirToken", "false");
+
     formData.append("rol", rol);
     if (rol !== "comun") formData.append("password", password);
     if (avatar) formData.append("avatar", avatar);

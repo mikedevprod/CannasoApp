@@ -1,8 +1,13 @@
-import express from 'express'
-import { getSocios } from '../../controllers/userController.js'
+import express from 'express';
+import { getSocios, actualizarUsuario } from '../../controllers/userController.js';
+import uploadAvatar from '../../middlewares/uploadAvatar.js';
 
-const sociosRoute = express.Router()
+const sociosRoute = express.Router();
 
-sociosRoute.get("/socios", getSocios)
+// Obtener todos los socios
+sociosRoute.get("/socios", getSocios);
 
-export default sociosRoute
+// Actualizar un socio (incluye imagen)
+sociosRoute.put("/socios/:id", uploadAvatar.single("avatar"), actualizarUsuario);
+
+export default sociosRoute;

@@ -23,16 +23,8 @@ export const registrarUsuario = async (req, res) => {
       nombre,
       numeroSocio,
       password: password || "",
-      rol,
+      rol: rol || "admin",
       foto: avatarPath,
-    });
-
-    const token = generarToken(usuario._id);
-
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
     });
 
     res.status(201).json({
@@ -46,7 +38,6 @@ export const registrarUsuario = async (req, res) => {
     res.status(500).json({ message: "Error al registrar usuario" });
   }
 };
-
 
 export const autenticarUsuario = async (req, res) => {
   const { numeroSocio, password } = req.body;
@@ -93,22 +84,30 @@ export const obtenerPerfil = async (req, res) => {
     res.status(404).json({ message: "Usuario no encontrado" });
   }
 };
+
 export const verificarToken = async (req, res) => {
-  const usuario = await Usuario.findById(req.user.id);
-  
-  if (usuario) {
-    res.json({
-      message: "Token Verificado",
-      nombre: usuario.nombre,
-      numeroSocio: usuario.numeroSocio,
-      rol: usuario.rol,
-    });
-    
-  } else {
-    res.status(404).json({ message: "Usuario no encontrado" });
+  try {
+    if (!req.usuario || !req.usuario._id) {
+      return res.status(401).json({ message: "Token inválido o no autorizado" });
+    }
+
+    const usuario = await Usuario.findById(req.usuario._id);
+
+    if (usuario) {
+      res.json({
+        message: "Token Verificado",
+        nombre: usuario.nombre,
+        numeroSocio: usuario.numeroSocio,
+        rol: usuario.rol,
+      });
+    } else {
+      res.status(404).json({ message: "Usuario no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error verificando token:", error);
+    res.status(500).json({ message: "Error al verificar token" });
   }
 };
-
 
 export const logoutUsuario = (req, res) => {
   res.clearCookie("jwt", {

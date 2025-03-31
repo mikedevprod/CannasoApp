@@ -4,9 +4,10 @@ import axios from "axios";
 
 export default function ModalRetirarSocio({ perfil, onClose }) {
   const [cantidad, setCantidad] = useState("");
-  const [firma, setFirma] = useState(""); // Estado para guardar la imagen en string
+  const [firma, setFirma] = useState(""); // Firma en base64
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,6 +16,17 @@ export default function ModalRetirarSocio({ perfil, onClose }) {
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.strokeStyle = "black";
+
+    const getEventCoords = (event) => {
+      if (event.touches) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          offsetX: event.touches[0].clientX - rect.left,
+          offsetY: event.touches[0].clientY - rect.top,
+        };
+      }
+      return { offsetX: event.offsetX, offsetY: event.offsetY };
+    };
 
     const startDrawing = (event) => {
       isDrawing.current = true;
@@ -33,25 +45,15 @@ export default function ModalRetirarSocio({ perfil, onClose }) {
     const stopDrawing = () => {
       isDrawing.current = false;
       ctx.beginPath();
-      saveSignature(); // Guardar firma cuando se deja de dibujar
-    };
-
-    const getEventCoords = (event) => {
-      if (event.touches) {
-        const rect = canvas.getBoundingClientRect();
-        return {
-          offsetX: event.touches[0].clientX - rect.left,
-          offsetY: event.touches[0].clientY - rect.top,
-        };
-      }
-      return { offsetX: event.offsetX, offsetY: event.offsetY };
+      saveSignature();
     };
 
     const saveSignature = () => {
-      const signatureData = canvas.toDataURL(); // Guardar la imagen como string Base64
+      const signatureData = canvas.toDataURL(); // base64
       setFirma(signatureData);
     };
 
+    // Event listeners
     canvas.addEventListener("mousedown", startDrawing);
     canvas.addEventListener("mousemove", draw);
     canvas.addEventListener("mouseup", stopDrawing);
@@ -73,26 +75,36 @@ export default function ModalRetirarSocio({ perfil, onClose }) {
     };
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(firma);
-    /*try {
-      await axios.post("http://localhost:5000/api/retiradas", {
-        idSocio: perfil.id,
-        cantidad,
-        firma, // Enviar la imagen almacenada en el estado
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error al registrar la retirada:", error);
-    }*/
-  };
-
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setFirma(""); // Limpiar la variable de la firma
+    setFirma("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post(
+        "/api/retiradas",
+        {
+          idSocio: perfil.numeroSocio,
+          cantidad,
+          firma,
+        },
+        {
+          withCredentials: true, // ✅ ESTA LÍNEA es la clave
+        }
+      );
+
+      setIsError(false)
+
+      onClose();
+    } catch (error) {
+      setIsError(true)
+      console.error("Error al registrar la retirada:", error);
+    }
   };
 
   return (
@@ -128,19 +140,16 @@ export default function ModalRetirarSocio({ perfil, onClose }) {
             </button>
           </div>
 
-          {/* Mostrar la firma en Base64 */}
-          {/**firma && (
-            <div>
-              <p>Firma Base64:</p>
-              <textarea readOnly value={firma} rows="4" style={{ width: "100%" }} />
-            </div>
-          ) */}
-
           <div className="modal-actions">
             <button type="submit">Confirmar</button>
             <button type="button" onClick={onClose}>
               Cancelar
             </button>
+          </div>
+          <div className="containerErrors">
+            {isError ? <>
+              <b><p style={{color: "#AA0000", display: "flex", justifyContent: "center"}}>No se ha realizado la retirada.</p></b>
+            </> : ""}
           </div>
         </form>
       </div>

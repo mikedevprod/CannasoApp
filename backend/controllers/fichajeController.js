@@ -3,7 +3,7 @@ import Usuario from "../models/Usuario.js";
 
 export const añadirFichaje = async (req, res) => {
   const { idSocio } = req.body;
-  const socioColaborador = req.user;
+  const socioColaborador = req.usuario;
 
   try {
     const usuario = await Usuario.findById(idSocio);

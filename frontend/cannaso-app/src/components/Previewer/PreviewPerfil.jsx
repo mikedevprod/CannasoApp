@@ -109,7 +109,7 @@ export default function PreviewPerfil({ perfil, setPerfiles, perfilColaborador }
         <div data-swapy-slot="4">
           <div data-swapy-item="4" className="swapy-item" id="chartD">
             <h2 className="donut-title">Cantidad Retirada</h2>
-            <DonutChart percentage={perfil.numeroSocio} />
+            <DonutChart percentage={perfil.cantidadTotalRetirada} />
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function ModalEditarSocio({ perfil, setPerfiles, onClose }) {
   const [formData, setFormData] = useState({
-    nombre: perfil.name,
+    nombre: perfil.nombre,
     numeroSocio: perfil.numeroSocio,
     foto: null,
   });
@@ -22,18 +22,21 @@ export default function ModalEditarSocio({ perfil, setPerfiles, onClose }) {
     const formDataToSend = new FormData();
     formDataToSend.append("nombre", formData.nombre);
     if (formData.foto) {
-      formDataToSend.append("avatar", formData.foto);
+      formDataToSend.append("avatar", formData.foto); // campo que reconoce multer
     }
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/usuario/${perfil.id}`,
+        `/api/socio/socios/${perfil._id}`,
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       
+
       setPerfiles((prevPerfiles) =>
-        prevPerfiles.map((p) => (p.id === perfil.id ? { ...p, ...response.data } : p))
+        prevPerfiles.map((p) =>
+          p._id === perfil._id ? { ...p, ...response.data } : p
+        )
       );
       onClose();
     } catch (error) {
@@ -44,7 +47,12 @@ export default function ModalEditarSocio({ perfil, setPerfiles, onClose }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Editar Socio - <span style={{color: "orange"}}><i>Socio Nº{perfil.numeroSocio}</i></span></h2>
+        <h2>
+          Editar Socio -{" "}
+          <span style={{ color: "orange" }}>
+            <i>Socio Nº{perfil.numeroSocio}</i>
+          </span>
+        </h2>
         <form onSubmit={handleSubmit} className="form-editar-socio">
           <div className="containerInputForm">
             <label>Nombre:</label>
@@ -52,7 +60,7 @@ export default function ModalEditarSocio({ perfil, setPerfiles, onClose }) {
               className="inputFormEditarSocio"
               type="text"
               name="nombre"
-              value={perfil.name}
+              value={perfil.nombre}
               onChange={handleChange}
               disabled
             />
@@ -70,7 +78,9 @@ export default function ModalEditarSocio({ perfil, setPerfiles, onClose }) {
 
           <div className="modal-actions">
             <button type="submit">Guardar</button>
-            <button type="button" onClick={onClose}>Cancelar</button>
+            <button type="button" onClick={onClose}>
+              Cancelar
+            </button>
           </div>
         </form>
       </div>

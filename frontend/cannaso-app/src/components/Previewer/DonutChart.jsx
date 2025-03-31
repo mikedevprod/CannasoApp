@@ -14,7 +14,7 @@ const DonutChart = ({ percentage }) => {
   const strokeWidth = 10; // Ancho del borde
   const normalizedRadius = radius - strokeWidth / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
+  const strokeDashoffset = circumference - (animatedPercentage / 60) * circumference;
 
   return (
     <div className="donut-container">
@@ -59,7 +59,7 @@ const DonutChart = ({ percentage }) => {
             fill="black"
             fontWeight="bold"
           >
-            {animatedPercentage}%
+            {animatedPercentage}g
           </text>
         </svg>
       </div>

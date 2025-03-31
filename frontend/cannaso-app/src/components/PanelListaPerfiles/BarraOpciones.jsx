@@ -36,11 +36,11 @@ export default function BarraOpciones({ setDashboardSeleccionado, perfilColabora
         <button onClick={() => setModalVisible(true)}>
           <img src={iconoAddUser} alt="Añadir Usuario" id="img-btt-barra-opciones" />
         </button>
-        <button onClick={() => console.log("Exportar Retiradas")}>
+        <button onClick={() => console.log("Exportar Retiradas")} id="btt-pdf">
           <img src={iconoPDF} alt="PDF Retiradas" id="img-btt-barra-opciones" />
           <b><span>RETIRADAS</span></b>
         </button>
-        <button onClick={() => console.log("Exportar Fichajes")}>
+        <button onClick={() => console.log("Exportar Fichajes")} id="btt-pdf">
           <img src={iconoPDF} alt="PDF Fichajes" id="img-btt-barra-opciones" />
           <b><span>FICHAJES</span></b>
         </button>

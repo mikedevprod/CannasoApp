@@ -27,7 +27,7 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
   
       const response = await axios.post(
         "http://localhost:5000/api/fichaje",
-        { idSocio, socioColaborador: perfilColaborador },
+        { idSocio, colaboradorAsociado: perfilColaborador },
         {
           withCredentials: true, // ✅ envía la cookie con el JWT
         }
