@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "./styles/ToggleSwitch.css";
 import axios from "axios";
 
+const FICHAJE_COOLDOWN = 900; // segundos → cambia aquí si quieres otro tiempo
+
 const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
   const [timers, setTimers] = useState(() => {
     const savedTimers = localStorage.getItem("timers");
@@ -11,77 +13,81 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
   const intervalRefs = useRef({});
 
   const handleFichaje = async () => {
-    if (timers[perfil.numeroSocio]?.isDisabled) {
+    const numeroSocio = perfil.numeroSocio;
+
+    if (timers[numeroSocio]?.isDisabled) {
       setVibrate(true);
       setTimeout(() => setVibrate(false), 300);
       return;
     }
-  
+
     try {
-      if (!perfil || !(perfil.id || perfil._id)) {
-        console.error("Perfil no válido o ID no definido");
-        return;
-      }
-  
       const idSocio = perfil.id || perfil._id;
-  
+      if (!idSocio) return console.error("ID no válido");
+
       const response = await axios.post(
         "http://localhost:5000/api/fichaje",
         { idSocio, colaboradorAsociado: perfilColaborador },
-        {
-          withCredentials: true, // ✅ envía la cookie con el JWT
-        }
+        { withCredentials: true }
       );
-  
-      const nuevoEstado = response.data.fichaje.fichajeCompletado ? false : true;
-      onToggle();
+
+      const fichaje = response.data.fichaje;
+      const esEntrada = response.status === 201;
+      const nuevoEstado = !fichaje.fichajeCompletado;
+
       perfil.active = nuevoEstado;
-  
-      if (nuevoEstado) {
-        const now = new Date().getTime();
+      onToggle();
+
+      if (esEntrada) {
+        const now = Date.now();
         const newTimers = {
           ...timers,
-          [perfil.numeroSocio]: {
+          [numeroSocio]: {
             isDisabled: true,
-            countdown: 30,
+            countdown: FICHAJE_COOLDOWN,
             fichajeTimestamp: now,
           },
         };
         setTimers(newTimers);
         localStorage.setItem("timers", JSON.stringify(newTimers));
-  
-        startTimer(perfil.numeroSocio, now);
+        startTimer(numeroSocio, now);
+      } else {
+        // Limpiar timer completamente al desfichar
+        const updatedTimers = { ...timers };
+        delete updatedTimers[numeroSocio];
+        setTimers(updatedTimers);
+        localStorage.setItem("timers", JSON.stringify(updatedTimers));
       }
     } catch (error) {
-      console.error("Error al gestionar el fichaje:", error.response?.data || error.message);
+      console.error("❌ Error fichaje:", error.response?.data || error.message);
     }
   };
-  
 
   const startTimer = (numeroSocio, timestamp) => {
-    clearInterval(intervalRefs.current[numeroSocio]); // Limpiar cualquier intervalo previo
+    clearInterval(intervalRefs.current[numeroSocio]);
 
     intervalRefs.current[numeroSocio] = setInterval(() => {
-      const elapsedSeconds = Math.floor((new Date().getTime() - timestamp) / 1000);
-      const remaining = 30 - elapsedSeconds;
+      const elapsed = Math.floor((Date.now() - timestamp) / 1000);
+      const remaining = FICHAJE_COOLDOWN - elapsed;
 
-      setTimers((prevTimers) => {
-        const updatedTimers = {
-          ...prevTimers,
+      setTimers((prev) => {
+        const updated = {
+          ...prev,
           [numeroSocio]: {
-            ...prevTimers[numeroSocio],
+            ...prev[numeroSocio],
             countdown: remaining > 0 ? remaining : 0,
             isDisabled: remaining > 0,
           },
         };
-        localStorage.setItem("timers", JSON.stringify(updatedTimers));
+
+        localStorage.setItem("timers", JSON.stringify(updated));
 
         if (remaining <= 0) {
           clearInterval(intervalRefs.current[numeroSocio]);
           delete intervalRefs.current[numeroSocio];
         }
 
-        return updatedTimers;
+        return updated;
       });
     }, 1000);
   };
@@ -90,24 +96,29 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
     const savedTimers = localStorage.getItem("timers");
     const parsedTimers = savedTimers ? JSON.parse(savedTimers) : {};
 
-    Object.keys(parsedTimers).forEach((numeroSocio) => {
-      const elapsedSeconds = Math.floor((new Date().getTime() - parsedTimers[numeroSocio].fichajeTimestamp) / 1000);
-      const remaining = 900 - elapsedSeconds;
+    const timer = parsedTimers[perfil.numeroSocio];
+    if (timer) {
+      const elapsedSeconds = Math.floor((Date.now() - timer.fichajeTimestamp) / 1000);
+      const remaining = FICHAJE_COOLDOWN - elapsedSeconds;
 
       if (remaining > 0) {
-        setTimers((prevTimers) => ({
-          ...prevTimers,
-          [numeroSocio]: {
-            ...parsedTimers[numeroSocio],
+        const updatedTimers = {
+          [perfil.numeroSocio]: {
+            ...timer,
             countdown: remaining,
             isDisabled: true,
           },
-        }));
-        startTimer(numeroSocio, parsedTimers[numeroSocio].fichajeTimestamp);
+        };
+        setTimers(updatedTimers);
+        localStorage.setItem("timers", JSON.stringify(updatedTimers));
+        startTimer(perfil.numeroSocio, timer.fichajeTimestamp);
       } else {
         localStorage.removeItem("timers");
+        setTimers({});
       }
-    });
+    } else {
+      setTimers({});
+    }
 
     return () => {
       Object.values(intervalRefs.current).forEach(clearInterval);
@@ -120,7 +131,10 @@ const ToggleSwitch = ({ isActive, onToggle, perfil, perfilColaborador }) => {
     <div className={`toggle-container ${isActive ? "active" : ""}`}> 
       <div 
         className={`toggle-switch ${isActive ? "active" : ""} ${timerData.isDisabled ? "disabled" : ""} ${vibrate ? "vibrate" : ""}`} 
-        style={{ backgroundColor: timerData.isDisabled ? "gray" : isActive ? "#378b41" : "#c2270f", cursor: timerData.isDisabled ? "default" : "pointer" }}
+        style={{
+          backgroundColor: timerData.isDisabled ? "gray" : isActive ? "#378b41" : "#c2270f",
+          cursor: timerData.isDisabled ? "default" : "pointer",
+        }}
       >
         <span className="toggle-label">{isActive ? "Activo" : "Inactivo"}</span>
         <div className="switch-circle" onClick={handleFichaje}>

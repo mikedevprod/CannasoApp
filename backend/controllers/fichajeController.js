@@ -13,7 +13,7 @@ export const añadirFichaje = async (req, res) => {
     }
 
     const fichajeAbierto = await Fichaje.findOne({
-      idSocio,
+      numeroSocio: usuario.numeroSocio,
       fichajeCompletado: false,
     });
 

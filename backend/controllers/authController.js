@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const generarToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+  return jwt.sign({ id }, process.env.JWT_SECRET || "ElPorroDeLaPerla");
 };
 
 export const registrarUsuario = async (req, res) => {
